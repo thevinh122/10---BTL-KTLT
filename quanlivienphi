@@ -38,6 +38,7 @@ class QuanLyVienPhi {
 private:
     vector<BenhNhan> danhSachBenhNhan;
     vector<DichVu> danhSachDichVu;
+    float bangGiaDichVu[3][2] = { {100000, 200000}, {50000, 100000}, {30000, 50000} };
 
 public:
     // Nhap danh sach benh nhan va dich vu 
@@ -98,16 +99,6 @@ public:
         return nullptr;
     }
 
-    // Sua thong tin benh nhan
-    void suaThongTinBenhNhan(string ten, string newTen) {
-        BenhNhan* bn = timKiemBenhNhan(ten);
-        if (bn) {
-            bn->tenBenhNhan = newTen;
-        } else {
-            cout << "Khong tim thay benh nhan voi ten: " << ten << endl;
-        }
-    }
-
     // Sap xep danh sach benh nhan theo ten
     void sapXepBenhNhan() {
         sort(danhSachBenhNhan.begin(), danhSachBenhNhan.end(),
@@ -124,6 +115,13 @@ public:
             tongVienPhi += benhNhan.tongVienPhi;
         }
         return tongVienPhi;
+    }
+    void hienThiBangGiaDichVu() {
+        cout << "Bảng giá dịch vụ:\n";
+        cout << "Loại dịch vụ | Phòng đơn | Phòng đôi\n";
+        cout << "Khám dịch vụ | " << bangGiaDichVu[0][0] << " | " << bangGiaDichVu[0][1] << endl;
+        cout << "Cấp cứu      | " << bangGiaDichVu[1][0] << " | " << bangGiaDichVu[1][1] << endl;
+        cout << "Khám bệnh    | " << bangGiaDichVu[2][0] << " | " << bangGiaDichVu[2][1] << endl;
     }
 
     // Xuat hoa don (dich vu da su dung)
@@ -155,5 +153,4 @@ public:
         return danhSachBenhNhan.size();
     }
 };
-
 int main()
