@@ -1,0 +1,159 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+class BenhNhan {
+public:
+    string tenBenhNhan;
+    vector<string> dichVuDaSuDung;
+    float tongVienPhi;
+
+    BenhNhan(string ten) : tenBenhNhan(ten) {}
+
+    void themDichVu(string dichVu) {
+        dichVuDaSuDung.push_back(dichVu);
+    }
+
+    void tinhTongVienPhi() {
+        // Tinh tong vien phi dua tren danh sach dich vu da su dung
+        // (Gia dinh rang moi dich vu co gia co dinh)
+        tongVienPhi = dichVuDaSuDung.size() * 50.0f;
+    }
+};
+
+// Lop "DichVu"
+class DichVu {
+public:
+    string tenDichVu;
+    float giaDichVu;
+
+    DichVu(string ten, float gia) : tenDichVu(ten), giaDichVu(gia) {}
+};
+
+// Lop "QuanLyVienPhi"
+class QuanLyVienPhi {
+private:
+    vector<BenhNhan> danhSachBenhNhan;
+    vector<DichVu> danhSachDichVu;
+
+public:
+    // Nhap danh sach benh nhan va dich vu 
+    void nhapDanhSach() {
+        string tenBenhNhan, tenDichVu;
+        float giaDichVu;
+
+        // Nhap benh nhan
+        cout << "Nhap danh sach benh nhan:\n";
+        while (true) {
+            cout << "Ten benh nhan (nhap 'x' de dung): ";
+            getline(cin, tenBenhNhan);
+            if (tenBenhNhan == "x") break;
+            danhSachBenhNhan.emplace_back(tenBenhNhan);
+        }
+
+        // Nhap dich vu 
+        cout << "Nhap danh sach dich vu:\n";
+        while (true) {
+            cout << "Ten dich vu (nhap 'x' de dung): ";
+            getline(cin, tenDichVu);
+            if (tenDichVu == "x") break;
+            cout << "Gia dich vu: ";
+            cin >> giaDichVu;
+            cin.ignore();
+            danhSachDichVu.emplace_back(tenDichVu, giaDichVu);
+        }
+    }
+
+    // Xuat danh sach benh nhan va dich vu 
+    void xuatDanhSach() {
+        cout << "Danh sách b?nh nhân:\n";
+        for (const auto& benhNhan : danhSachBenhNhan) {
+            cout << "Tên b?nh nhân: " << benhNhan.tenBenhNhan << endl;
+            cout << "D?ch v? đ? s? d?ng: ";
+            for (const auto& dichVu : benhNhan.dichVuDaSuDung) {
+                cout << dichVu << ", ";
+            }
+            cout << "\nT?ng vi?n phí: " << benhNhan.tongVienPhi << " VND" << endl;
+            cout << endl;
+        }
+
+        cout << "Danh sách d?ch v?:\n";
+        for (const auto& dichVu : danhSachDichVu) {
+            cout << "Tên d?ch v?: " << dichVu.tenDichVu << endl;
+            cout << "Giá d?ch v?: " << dichVu.giaDichVu << " VND" << endl;
+            cout << endl;
+        }
+    }
+
+    // Tim kiem benh nhan theo ten
+    BenhNhan* timKiemBenhNhan(string ten) {
+        auto it = find_if(danhSachBenhNhan.begin(), danhSachBenhNhan.end(),
+                         [&](const BenhNhan& bn) { return bn.tenBenhNhan == ten; });
+        if (it != danhSachBenhNhan.end()) {
+            return &(*it);
+        }
+        return nullptr;
+    }
+
+    // Sua thong tin benh nhan
+    void suaThongTinBenhNhan(string ten, string newTen) {
+        BenhNhan* bn = timKiemBenhNhan(ten);
+        if (bn) {
+            bn->tenBenhNhan = newTen;
+        } else {
+            cout << "Khong tim thay benh nhan voi ten: " << ten << endl;
+        }
+    }
+
+    // Sap xep danh sach benh nhan theo ten
+    void sapXepBenhNhan() {
+        sort(danhSachBenhNhan.begin(), danhSachBenhNhan.end(),
+             [](const BenhNhan& bn1, const BenhNhan& bn2) {
+                 return bn1.tenBenhNhan < bn2.tenBenhNhan;
+             });
+    }
+
+    // Thu vien phi (theo ngay, theo thang)
+    int thuVienPhi(int ngay, int thang) {
+        int tongVienPhi = 0;
+        for (const auto& benhNhan : danhSachBenhNhan) {
+            // Tinh toan va thu vien phi dua tren ngay, thang
+            tongVienPhi += benhNhan.tongVienPhi;
+        }
+        return tongVienPhi;
+    }
+
+    // Xuat hoa don (dich vu da su dung)
+    string xuatHoaDon(string tenBenhNhan) {
+        BenhNhan* bn = timKiemBenhNhan(tenBenhNhan);
+        if (bn) {
+            string hoaDon = "Hoa don dich vu cua benh nhan " + bn->tenBenhNhan + ":\n";
+            for (const auto& dichVu : bn->dichVuDaSuDung) {
+                hoaDon += "- " + dichVu + "\n";
+            }
+            hoaDon += "Tong vien phi: " + to_string(bn->tongVienPhi) + " VND";
+            return hoaDon;
+        }
+        return "Khong tim thay benh nhan voi ten: " + tenBenhNhan;
+    }
+
+    // Tim kiem dich vu theo ten
+    DichVu* timKiemDichVu(string ten) {
+        auto it = find_if(danhSachDichVu.begin(), danhSachDichVu.end(),
+                         [&](const DichVu& dv) { return dv.tenDichVu == ten; });
+        if (it != danhSachDichVu.end()) {
+            return &(*it);
+        }
+        return nullptr;
+    }
+
+    // Tinh tong so binh nhan
+    int tongSoBenhNhan() {
+        return danhSachBenhNhan.size();
+    }
+};
+
+int main()
