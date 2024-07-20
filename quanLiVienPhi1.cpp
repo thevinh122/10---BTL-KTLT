@@ -36,6 +36,8 @@ public:
 		getline(cin, queQuan);
 		cout << "\nNhap so dien thoai: ";
 		cin >> soDienThoai;
+		cout << "\nNhap vien phi: ";
+		cin >> vienPhi;
 		getchar();
 	}
 
@@ -55,7 +57,10 @@ public:
 	long long getID() const {
 		return ID;
 	}
-
+	long long get_vienPhi() const {
+		return vienPhi;
+	}
+ 
 // Ham sua thong tin benh nhan
 	void suaThongTin(string name, string queQuan, string ngaySinh, long long soDienThoai, long long vienPhi) {
 		if (!name.empty()) this->name = name;
@@ -63,13 +68,6 @@ public:
 		if (!queQuan.empty()) this->queQuan = queQuan;
 		if (soDienThoai != 0) this->soDienThoai = soDienThoai;
 		if (vienPhi != 0) this->vienPhi = vienPhi;
-	}
-
-	long long get_vienPhi() const {
-		return vienPhi;
-	}
-	void suaVienPhi(long long vienPhi) {
-		this->vienPhi = vienPhi;
 	}
 };
 
@@ -93,12 +91,12 @@ public:
 
 	DichVu(string loaiDichVu, string loaiPhong, string ngayNhapVien, string ngayXuatVien, double tienTamUng, double tongTien) 
 		: loaiDichVu(loaiDichVu), loaiPhong(loaiPhong), ngayNhapVien(ngayNhapVien), ngayXuatVien(ngayXuatVien), tienTamUng(tienTamUng), tongTien(tongTien) {}
-
+ 
 // Ham nhap cac lua chon dich vu
 	void input() {
 		int chonDichVu, chonPhong;
 
-		cout << "Chon loai dich vu (1.Kham dich vu, 2.Kham benh, 3.Cap cuu): ";
+		cout << "\nChon loai dich vu (1.Kham dich vu, 2.Kham benh, 3.Cap cuu): ";
 		cin >> chonDichVu;
 		while (chonDichVu < 1 || chonDichVu > 3) {
 			cout << "Loai dich vu khong hop le, vui long nhap lai !";
@@ -141,19 +139,24 @@ public:
 	double getTongTien() const {
 		return tongTien;
 	}
-
 	string getLoaiDichVu() const {
 		return loaiDichVu;
 	}
+	string getLoaiPhong() const {
+		return loaiPhong;
+	}
+	double getTienTamUng() const {
+		return tienTamUng;
+	}
 
 // Ham sua loai dich vu
-	void suaLoaiDichVu(string loaiDichVu, string loaiPhong, string ngayNhapVien, string ngayXuatVien, double tienTamUng, double tong_tien) {
-		if (!loaiDichVu.empty()) this->loaiDichVu = loaiDichVu;
-		if (!loaiPhong.empty()) this->loaiPhong = loaiPhong;
-		if (!ngayNhapVien.empty()) this->ngayNhapVien = ngayNhapVien;
-		if (!ngayXuatVien.empty()) this->ngayXuatVien = ngayXuatVien;
-		if (tienTamUng != 0) this->tienTamUng = tienTamUng;
-		if (tongTien != 0) this->tongTien = tongTien;
+	void suaLoaiDichVu(const string& _loaiDichVu, const string& _loaiPhong, const string& _ngayNhapVien, const string& _ngayXuatVien, double _tienTamUng, double _tongTien) {
+		loaiDichVu = _loaiDichVu;
+		loaiPhong = _loaiPhong;
+		ngayNhapVien = _ngayNhapVien;
+		ngayXuatVien = _ngayXuatVien;
+		tienTamUng = _tienTamUng;
+		tongTien = _tongTien;
 	}
 };
 
@@ -263,13 +266,13 @@ public:
 
 		for (int i = 0; i < soLuong; i++) {
 			DichVu dv;
-			cout << "Dich vu thu" << i + 1 << ": ";
+			cout << "Dich vu thu " << i + 1 << ": ";
 			dv.input();
 			dich_vu[soLuongDichVu++] = dv;
 		}
 	}
 
-// Hien thi danh sach dich da chon
+// Hien thi danh sach dich vu da chon
 	void hienThiDanhSachDV() const {
 		for (int i = 0; i < soLuongDichVu; i++) {
 			dich_vu[i].hienThi();
@@ -277,7 +280,7 @@ public:
 		}
 	}
 
-// Tim kiem dich vu theo ten
+// Tim kiem dich vu theo tong tien
 	void timKiemTheoTen(const string& name) const {
 		for (int i = 0; i < soLuongDichVu; i++) {
 			if (dich_vu[i].getTongTien() == stod(name)) {
@@ -296,10 +299,42 @@ public:
 		}
 		return tongTien;
 	}
+
 // Hien thi tong tien
 	void hienThiTongTien() const {
-		double tongTienDichVu = tinhTongTienDichVu();
-		cout << "Tong tien cua dich vu la: " << tongTienDichVu << endl;
+		double tongTien = 0;
+		double bangGiaDichVu[3] = { 500000, 1000000, 2000000 }; 
+		double bangGiaPhong[2] = { 100000, 200000 }; 
+
+		for (int i = 0; i < soLuongDichVu; i++) {
+			double giaDichVu = 0;
+			if (dich_vu[i].getLoaiDichVu() == "Kham dich vu") {
+				giaDichVu = bangGiaDichVu[0];
+			}
+			else if (dich_vu[i].getLoaiDichVu() == "Kham benh") {
+				giaDichVu = bangGiaDichVu[1];
+			}
+			else if (dich_vu[i].getLoaiDichVu() == "Cap cuu") {
+				giaDichVu = bangGiaDichVu[2];
+			}
+
+			double giaPhong = 0;
+			if (dich_vu[i].getLoaiPhong() == "Phong don") {
+				giaPhong = bangGiaPhong[0];
+			}
+			else if (dich_vu[i].getLoaiPhong() == "Phong doi") {
+				giaPhong = bangGiaPhong[1];
+			}
+
+			// Tinh tong tien cua moi dich vu
+			double tienTamUng = dich_vu[i].getTienTamUng();
+			double tongTienDichVu = giaDichVu + giaPhong + tienTamUng;
+
+			// Cong vao tong tien
+			tongTien += tongTienDichVu;
+		}
+
+		cout << "Tong vien phi cua cac dich vu da chon: " << tongTien << " VND" << endl;
 	}
 
 // Sua loai dich vu
@@ -309,10 +344,13 @@ public:
 				string _loaiDichVu, _loaiPhong, _ngayNhapVien, _ngayXuatVien;
 				double _tienTamUng, _tongTien;
 
-				cout << "Nhap thong tin moi (de trong neu khong muon thay doi): \n";
-				cout << "Nhap loai dich vu: ";
+				double bangGiaDichVu[3] = { 500000, 1000000, 2000000 }; //Kham dich vu, kham benh, cap cuu
+				double bangGiaPhong[2] = { 100000, 200000 }; // Phong don, phong doi
+
+				cout << "Nhap thong tin moi (khong duoc de trong): \n";
+				cout << "Nhap loai dich vu (1,Kham dich vu, 2.Kham benh, 3.Cap cuu): ";
 				getline(cin, _loaiDichVu);
-				cout << "Nhap loai phong: ";
+				cout << "Nhap loai phong (1.Phong don, 2.Phong doi): ";
 				getline(cin, _loaiPhong);
 				cout << "Nhap ngay nhap vien: ";
 				getline(cin, _ngayNhapVien);
@@ -320,10 +358,38 @@ public:
 				getline(cin, _ngayXuatVien);
 				cout << "Nhap tien tam ung: ";
 				cin >> _tienTamUng;
-				cout << "Nhap tong tien: ";
-				cin >> _tongTien;
 				cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
+				// Xac dinh gia dich vu va gia phong dua tren lua chon
+				double giaDichVu = 0;
+				if (_loaiDichVu == "1" || _loaiDichVu == "Kham dich vu") {
+					giaDichVu = bangGiaDichVu[0];
+					_loaiDichVu = "Kham dich vu";
+				}
+				else if (_loaiDichVu == "2" || _loaiDichVu == "Kham benh") {
+					giaDichVu = bangGiaDichVu[1];
+					_loaiDichVu = "Kham benh";
+				}
+				else if (_loaiDichVu == "3" || _loaiDichVu == "Cap cuu") {
+					giaDichVu = bangGiaDichVu[2];
+					_loaiDichVu = "Cap cuu";
+				}
+
+				double giaPhong = 0;
+				if (_loaiPhong == "1" || _loaiPhong == "Phong don") {
+					giaPhong = bangGiaPhong[0];
+					_loaiPhong = "Phong don";
+				}
+				else if (_loaiPhong == "2" || _loaiPhong == "Phong doi") {
+					giaPhong = bangGiaPhong[1];
+					_loaiPhong = "Phong doi";
+				}
+
+				// Tinh lai tong tien
+				_tongTien = giaDichVu + giaPhong + _tienTamUng;
+
+
+				// Cap nhat thong tin dich vu
 				dich_vu[i].suaLoaiDichVu(_loaiDichVu, _loaiPhong, _ngayNhapVien, _ngayXuatVien, _tienTamUng, _tongTien);
 				return;
 			}
@@ -344,7 +410,7 @@ int main() {
 		cout << "| 4. Sua thong tin cua benh nhan           |\n";
 		cout << "| 5. Lua chon dich vu                      |\n";
 		cout << "| 6. Hien thi danh sach dich vu da chon    |\n";
-		cout << "| 7. Tim dich vu theo ten                  |\n";
+		cout << "| 7. Tim dich vu theo tong tien            |\n";
 		cout << "| 8. Sua dich vu                           |\n";
 		cout << "| 9. Hien thi tong vien phi                |\n";
 		cout << "| 10. Sap xep benh nhan theo vien phi tang |\n";
@@ -384,14 +450,14 @@ int main() {
 			break;
 		case 7: {
 			string name;
-			cout << "Nhap ten dich vu can tim: ";
+			cout << "Nhap tong tien cua dich vu can tim: ";
 			getline(cin, name);
 			qlvp.timKiemTheoTen(name);
 			break;
 		}
 		case 8: {
 			string name;
-			cout << "Nhap thong ten dich vu can sua: ";
+			cout << "Nhap thong tin dich vu can sua: ";
 			getline(cin, name);
 			qlvp.suaDichVu(name);
 			break;
