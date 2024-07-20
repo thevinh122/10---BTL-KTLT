@@ -70,21 +70,21 @@ public:
 
     // Xuat danh sach benh nhan va dich vu 
     void xuatDanhSach() {
-        cout << "Danh sách b?nh nhân:\n";
+        cout << "Danh sach benh nhan:\n";
         for (const auto& benhNhan : danhSachBenhNhan) {
-            cout << "Tên b?nh nhân: " << benhNhan.tenBenhNhan << endl;
-            cout << "D?ch v? đ? s? d?ng: ";
+            cout << "Ten benh nhan: " << benhNhan.tenBenhNhan << endl;
+            cout << "Dich vu da su dung: ";
             for (const auto& dichVu : benhNhan.dichVuDaSuDung) {
                 cout << dichVu << ", ";
             }
-            cout << "\nT?ng vi?n phí: " << benhNhan.tongVienPhi << " VND" << endl;
+            cout << "\nTong vien phi: " << benhNhan.tongVienPhi << " VND" << endl;
             cout << endl;
         }
 
-        cout << "Danh sách d?ch v?:\n";
+        cout << "Danh sach dich vu:\n";
         for (const auto& dichVu : danhSachDichVu) {
-            cout << "Tên d?ch v?: " << dichVu.tenDichVu << endl;
-            cout << "Giá d?ch v?: " << dichVu.giaDichVu << " VND" << endl;
+            cout << "Ten dich vu: " << dichVu.tenDichVu << endl;
+            cout << "Gia dich vu: " << dichVu.giaDichVu << " VND" << endl;
             cout << endl;
         }
     }
@@ -117,11 +117,11 @@ public:
         return tongVienPhi;
     }
     void hienThiBangGiaDichVu() {
-        cout << "Bảng giá dịch vụ:\n";
-        cout << "Loại dịch vụ | Phòng đơn | Phòng đôi\n";
-        cout << "Khám dịch vụ | " << bangGiaDichVu[0][0] << " | " << bangGiaDichVu[0][1] << endl;
-        cout << "Cấp cứu      | " << bangGiaDichVu[1][0] << " | " << bangGiaDichVu[1][1] << endl;
-        cout << "Khám bệnh    | " << bangGiaDichVu[2][0] << " | " << bangGiaDichVu[2][1] << endl;
+        cout << "Bang gia dich vu:\n";
+        cout << "Loai dich vu | Phòng đơn | Phòng đôi\n";
+        cout << "Kham dich vu | " << bangGiaDichVu[0][0] << " | " << bangGiaDichVu[0][1] << endl;
+        cout << "Cap cuu      | " << bangGiaDichVu[1][0] << " | " << bangGiaDichVu[1][1] << endl;
+        cout << "Kham benh    | " << bangGiaDichVu[2][0] << " | " << bangGiaDichVu[2][1] << endl;
     }
 
     // Xuat hoa don (dich vu da su dung)
@@ -138,15 +138,6 @@ public:
         return "Khong tim thay benh nhan voi ten: " + tenBenhNhan;
     }
 
-    // Tim kiem dich vu theo ten
-    DichVu* timKiemDichVu(string ten) {
-        auto it = find_if(danhSachDichVu.begin(), danhSachDichVu.end(),
-                         [&](const DichVu& dv) { return dv.tenDichVu == ten; });
-        if (it != danhSachDichVu.end()) {
-            return &(*it);
-        }
-        return nullptr;
-    }
 
     // Tinh tong so binh nhan
     int tongSoBenhNhan() {
